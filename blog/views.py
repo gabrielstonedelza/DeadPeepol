@@ -51,7 +51,7 @@ def album_detail(request,slug):
         if form.is_valid():
             useremail = form.cleaned_data.get('email')
             if TrackByEmail.objects.filter(email=useremail).exists():
-                messages.info(request,f"Email already exist for a non-downloadable spot.")
+                messages.info(request,"Email already exist for a non-downloadable spot.")
             else:
                 TrackByEmail.objects.create(email=useremail,album_title=album.slug,random_id=secret_download_key) 
                 return HttpResponseRedirect(album.get_absolute_url_afteremail())
@@ -91,7 +91,7 @@ def can_download(request):
                 your_album = etrack_email.album_title
                 your_code = etrack_email.random_id
                 album_link = f"127.0.0.1:8000/can_download_track/{your_album}/"
-                msg["Subject"] = f"Dealpeepol welcomes you dearly."
+                msg["Subject"] = "Dealpeepol welcomes you dearly."
                 msg["From"] = settings.EMAIL_HOST_USER
                 msg["To"] = usersformemail
                 msg.set_content(
@@ -122,7 +122,7 @@ def can_download(request):
             
             else:
                 # ve.delete()
-                messages.info(request,f"Your email does not exist.")
+                messages.info(request,"Your email does not exist.")
                 # return redirect("albums")
 
     else:
@@ -152,15 +152,15 @@ def can_download_tracks(request,slug):
             etrack_email = get_object_or_404(TrackByEmail,email=email)
             if TrackByEmail.objects.filter(email=email).exists() and TrackByEmail.objects.filter(random_id=code).exists():
                 email_code_confirmed = True
-                messages.success(request,f"Email and code confirmed successfully.")
+                messages.success(request,"Email and code confirmed successfully.")
                 etrack_email.delete()
                 return redirect('download_now',slug=slug)
             else:
                 email_code_confirmed = False
-                messages.info(request,f"Invalid details.")
+                messages.info(request,"Invalid details.")
                 # return redirect("albums")
         else:
-            messages.info(request,f"Invalid details")
+            messages.info(request,"Invalid details")
     else:
         form = ConfirmAndDownload()
 
