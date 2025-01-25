@@ -8,13 +8,13 @@ from .forms import GetAlbumByEmailForm,ConfirmAndDownload,VerifyEmailForm
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.core.mail import send_mail
-import random
 import  re
 import time
 from datetime import datetime,date,time,timedelta
 from email.message import EmailMessage
 import smtplib
 from gtts import gTTS 
+import secrets
 
 
 GET_ALBUM_ID = 0
@@ -44,7 +44,7 @@ def album_detail(request,slug):
     album = get_object_or_404(Album,slug=slug)
     tracks  = Track.objects.filter(album=album).order_by('-date_posted')
     my_tracks = tracks.count()
-    secret_download_key = random.randint(1,2000000)
+    secret_download_key = secrets.SystemRandom().randint(1,2000000)
 
     if request.method == "POST":
         form = GetAlbumByEmailForm(request.POST)
@@ -115,7 +115,7 @@ def can_download(request):
                     
                     emailsent = True
                     uplatform = platform.platform()
-                    your_code = random.randint(100,1000000)
+                    your_code = secrets.SystemRandom().randint(100,1000000)
                     uinfo = Vtrack.objects.create(user_code=your_code,user_platform=uplatform)
                     ve.delete()
                     check_email = "Please check your email now...."
